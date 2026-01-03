@@ -1,0 +1,2912 @@
+#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+\usepackage{pifont}
+\usepackage{textcomp}
+
+% It appears that one has to use pdf(la)tex for the conversion, ps2pdf
+% handles bookmarks but not thumbnails.
+
+\usepackage[pdftex,bookmarks=true,bookmarksnumbered=true,colorlinks,linkcolor=blue]{hyperref}
+\usepackage[pdftex]{thumbpdf}
+
+% Generating thumbs also requires the thumbpdf Perl script., e.g.
+%
+% cd ~/links/product_documentation/vt_prolog
+% /usr/share/texmf/bin/thumbpdf --modes=pdftex vt_prolog2.pdf
+%
+% followed by a rerun of the export sequence.
+
+\hypersetup{
+  pdfauthor={Bill Thompson and Bev Thompson. Typeset Mark Morgan Lloyd},
+  pdftitle={Implementing a PROLOG Interpreter: Programming Structures},
+  pdfsubject={Implementing a PROLOG Interpreter: Programming Structures},
+  pdfkeywords={PROLOG, VT-PROLOG},
+  pdfcreator={LyX, LaTeX with hyperref and thumbpdf packages}
+}
+
+% Manually-installed initial-caps fonts from
+% http://www.ctan.org/tex-archive/fonts/initials or
+% Debian's texlive-fonts-extra package.
+
+\usepackage{type1cm}
+\usepackage{lettrine}
+\input Typocaps.fd
+
+\usepackage{multicol}
+\end_preamble
+\use_default_options false
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 0.75in
+\topmargin 0.5in
+\rightmargin 0.5in
+\bottommargin 0.5in
+\headheight 0.25in
+\headsep 0.25in
+\footskip 0.25in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+
+\size larger
+Implementing a PROLOG Interpreter:
+\begin_inset Newline newline
+\end_inset
+
+Programming Structures
+\end_layout
+
+\begin_layout Author
+
+\size larger
+By Bill Thompson and Bev Thompson
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\noindent
+Originally published in AI Expert, October 1986.
+ Revised and typeset by Mark Morgan Lloyd, January 2010.
+ Original authors' copyright reserved.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Date
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Dummy 'Date' paragraph.
+\end_layout
+
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "85col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename Turk-engraving5.eps
+	lyxscale 40
+	scale 40
+	keepAspectRatio
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Turk-engraving-figure.eps
+	lyxscale 40
+	scale 40
+	keepAspectRatio
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+Understanding what is inside a complex system can make its operation seem
+ less like magic, and suggest ways it can be exploited and improved.
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+columnseprule}{0.25pt}
+\backslash
+begin{multicols}{2}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lettrine[lines=3,findent=1pt]{
+\backslash
+fontsize{30pt}{30pt}
+\backslash
+usefont{U}{Typocaps}{xl}{n}I}{n}
+\end_layout
+
+\end_inset
+
+ the last issue we looked at the method PROLOG uses to search its data base
+ in order to satisfy a query.
+ This month we'll take a brief look at some of the programming components
+ involved in actually implementing a PROLOG interpreter.
+\end_layout
+
+\begin_layout Standard
+The first step is to make some decisions about the storage of sentences
+ and queries.
+ Some form of linked allocation method is an obvious choice.
+ This method gives us a great deal of flexibility in designing the data
+ structures, and if we use dynamic storage allocation we are saved the trouble
+ of having to estimate things like array sizes and rule and query lengths.
+ Since many implementations of PROLOG are designed this way, studying linked
+ allocation should give us some insight into the behaviour of commercial
+ PROLOG interpreters.
+\end_layout
+
+\begin_layout Standard
+We need to be able to store four basic types of item: functors, constants,
+ variables and 
+\shape italic
+cons
+\shape default
+ items.
+ The first three have already been introduced, the fourth is the glue that
+ holds the rules and queries together.
+ The functors, constants and variables are stored in records that contain
+ a string field to store the actual data and a tag field to indicate which
+ kind of data item the string represents.
+ The 
+\shape italic
+cons
+\shape default
+ items require a bit more explanation.
+\end_layout
+
+\begin_layout Standard
+A 
+\shape italic
+cons
+\shape default
+ item is a bit like the round disks that come with Tinkertoys.
+ You insert sticks into the disks and at the other end of each stick you
+ can attach an object or another disk.
+ Connecting the disks and sticks together allows you to build large, complex
+ structures out of simple pieces.
+ Similarly, the 
+\shape italic
+cons
+\shape default
+ items allow us to build complicated data structures in memory by attaching
+ constants, variables, and functors to one another in the proper order.
+\end_layout
+
+\begin_layout Standard
+A 
+\shape italic
+cons
+\shape default
+ item consists of a tag, which identifies the record as a 
+\shape italic
+cons
+\shape default
+ item, and two pointers, a head pointer and a tail pointer.
+ The head pointer points to the first item in the list; this could be a
+ data item, such as a constant, or the start of another list.
+ In the latter case, the head pointer points to another 
+\shape italic
+cons
+\shape default
+ item.
+ The tail pointer points to the rest of the list.
+ The items are linked together in a list by the tail pointers.
+\end_layout
+
+\begin_layout Standard
+As we build lists, 
+\shape italic
+cons
+\shape default
+ items will proliferate, but this method gives us a great deal of flexibility.
+ We can represent a large number of complicated structures using this method
+ without having to change our basic allocation routines.
+ Figure 1
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Figure 1"
+
+\end_inset
+
+ shows a typical 
+\shape italic
+cons
+\shape default
+ cell.
+ The basic data types are shown in Listing 1
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Listing 1"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "67col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+FIGURE 1
+\begin_inset CommandInset label
+LatexCommand label
+name "Figure 1"
+
+\end_inset
+
+: Cell containing constant 'a' and a 
+\shape italic
+cons
+\shape default
+ cell.
+\end_layout
+
+\begin_layout Plain Layout
+
+\lyxline
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset Graphics
+	filename vt_prolog2_fig1.eps
+	keepAspectRatio
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+The next step is to define some memory allocation routines for the various
+ kinds of nodes.
+ We create a routine called 
+\shape italic
+alloc_str
+\shape default
+ to allocate string storage for functors, constants and variables.
+ We pass this routine a string and a node type and it creates a node of
+ the proper type to hold the string.
+ The routine returns a pointer to the new node.
+ Listing 2
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Listing 2"
+
+\end_inset
+
+ contains this routine.
+ 
+\shape italic
+get_memory
+\shape default
+ does the actual work of retrieving free memory.
+ This is a low-level routine that varies a great deal among different implementa
+tions of programming languages, so we simply ignore its details and assume
+ our programming language gives us the tools to construct the necessary
+ allocation routines.
+\end_layout
+
+\begin_layout Standard
+We also need some routines to perform the actual construction of lists.
+ The basic list construction routine is called 
+\shape italic
+cons
+\shape default
+, which is short for construct.
+ It is passed two pointers: the first points to an item that becomes the
+ head of a list, the scont points to the list to which the new item will
+ be attached.
+ 
+\shape italic
+cons
+\shape default
+ creates a new 
+\shape italic
+cons
+\shape default
+ node and sets the node's head pointer equal to the first pointer and its
+ tail pointer equal to the second, returning a pointer to the new node.
+ Lists are constructed by repeated application of 
+\shape italic
+cons
+\shape default
+.
+\end_layout
+
+\begin_layout Standard
+Routines to take lists apart are also necessary.
+ 
+\shape italic
+head
+\shape default
+ returns the head pointer from a 
+\shape italic
+cons
+\shape default
+ cell and 
+\shape italic
+tail
+\shape default
+ returns the tail pointer.
+ 
+\shape italic
+cons
+\shape default
+, 
+\shape italic
+head
+\shape default
+ and 
+\shape italic
+tail
+\shape default
+ are illustrated in Listing 3
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Listing 3"
+
+\end_inset
+
+.
+ Figure 2
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Figure 2"
+
+\end_inset
+
+ shows some of the steps involved in creating the list ('a' 'b' 'c').
+\end_layout
+
+\begin_layout Standard
+One other basic routine is also useful.
+ 
+\shape italic
+append_list
+\shape default
+, shown in Listing 4
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Listing 4"
+
+\end_inset
+
+, attaches one list to the tail of the other and returns a pointer to the
+ newly constructed list.
+ It does this by 
+\shape italic
+cons
+\shape default
+ing the head of the first list to a list created by appending the second
+ list to the tail of the first.
+ If you are uncomfortable with list processing or recursion in general it
+ is worthwhile spending some time studying this routine.
+ It illustrates the kind of subtle but powerful programming techniques used
+ in processing lists.
+ In many programming languages, recursive functions pay a heavy performance
+ price.
+ We will ignore performance constraints for the present, we can always tune
+ the program up later.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{multicols}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lyxline
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1
+\backslash
+parskip}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "67col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+LISTING 1
+\begin_inset CommandInset label
+LatexCommand label
+name "Listing 1"
+
+\end_inset
+
+: Record description for a node.
+\end_layout
+
+\begin_layout Plain Layout
+
+\lyxline
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+node_type = (cons_node,func,variable,constant) ;
+\begin_inset Newline newline
+\end_inset
+
+node_ptr = ^node ;
+\begin_inset Newline newline
+\end_inset
+
+node = RECORD
+\begin_inset Newline newline
+\end_inset
+
+        CASE tag : node_type OF
+\begin_inset Newline newline
+\end_inset
+
+         cons_node : (tail_ptr : node_ptr ;
+\begin_inset Newline newline
+\end_inset
+
+                      head_ptr : node_ptr) ;
+\begin_inset Newline newline
+\end_inset
+
+         func,
+\begin_inset Newline newline
+\end_inset
+
+         constant,
+\begin_inset Newline newline
+\end_inset
+
+         variable :  (string_data : string80) ;
+\begin_inset Newline newline
+\end_inset
+
+        END ;
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "67col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+LISTING 2
+\begin_inset CommandInset label
+LatexCommand label
+name "Listing 2"
+
+\end_inset
+
+: Low-level allocation routines for strings.
+\end_layout
+
+\begin_layout Plain Layout
+
+\lyxline
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+FUNCTION alloc_str(typ : node_type ; s : string80) : node_ptr ;
+\begin_inset Newline newline
+\end_inset
+
+ VAR
+\begin_inset Newline newline
+\end_inset
+
+  pt : node_ptr ;
+\begin_inset Newline newline
+\end_inset
+
+ BEGIN
+\begin_inset Newline newline
+\end_inset
+
+  get_memory(pt) ;
+\begin_inset Newline newline
+\end_inset
+
+  pt^.tag := typ ;
+\begin_inset Newline newline
+\end_inset
+
+  pt^.string_data := s ;
+\begin_inset Newline newline
+\end_inset
+
+  alloc_str := pt ;
+\begin_inset Newline newline
+\end_inset
+
+END ; (* alloc_str *)
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "67col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+LISTING 3
+\begin_inset CommandInset label
+LatexCommand label
+name "Listing 3"
+
+\end_inset
+
+: Basic list-processing routines.
+\end_layout
+
+\begin_layout Plain Layout
+
+\lyxline
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+FUNCTION cons(new_node,list : node_ptr) : node_ptr ;
+\begin_inset Newline newline
+\end_inset
+
+ VAR
+\begin_inset Newline newline
+\end_inset
+
+  p : node_ptr ;
+\begin_inset Newline newline
+\end_inset
+
+ BEGIN
+\begin_inset Newline newline
+\end_inset
+
+  get_memory(p) ;
+\begin_inset Newline newline
+\end_inset
+
+  p^.tag := cons_node ;
+\begin_inset Newline newline
+\end_inset
+
+  p^.head_ptr := new_node ;
+\begin_inset Newline newline
+\end_inset
+
+  p^.tail_ptr := list ;
+\begin_inset Newline newline
+\end_inset
+
+  cons := p;
+\begin_inset Newline newline
+\end_inset
+
+END ; (* cons *)
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+FUNCTION head(list : node_ptr) : node_ptr ;
+\begin_inset Newline newline
+\end_inset
+
+ BEGIN
+\begin_inset Newline newline
+\end_inset
+
+  IF list = NIL
+\begin_inset Newline newline
+\end_inset
+
+   THEN head := NIL
+\begin_inset Newline newline
+\end_inset
+
+   ELSE head := list^.head_ptr ;
+\begin_inset Newline newline
+\end_inset
+
+END ; (* head *)
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+FUNCTION tail(list : node_ptr) : node_ptr ;
+\begin_inset Newline newline
+\end_inset
+
+ BEGIN
+\begin_inset Newline newline
+\end_inset
+
+  IF list = NIL
+\begin_inset Newline newline
+\end_inset
+
+   THEN tail := NIL
+\begin_inset Newline newline
+\end_inset
+
+   ELSE IF list^.tag = cons_node
+\begin_inset Newline newline
+\end_inset
+
+         THEN tail := list^.tail_ptr
+\begin_inset Newline newline
+\end_inset
+
+         ELSE tail := NIL ;
+\begin_inset Newline newline
+\end_inset
+
+END ; (* tail *)
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lyxline
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+columnseprule}{0.25pt}
+\backslash
+begin{multicols}{2}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+COMPILING
+\end_layout
+
+\begin_layout Standard
+Once we have decided on the basic storage methods, the next step is to develop
+ a method of transforming the external form of the rules into their internal
+ form as linked lists.
+ To do this we have to be more precise about what constitutes a legitimate
+ rule or query.
+ The Backus-Naur form (BNF) shown in Listing 5
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Listing 5"
+
+\end_inset
+
+ illustrates the formal syntax of rules and queries for our interpreter.
+ In a BNF description of a grammar, 
+\begin_inset Quotes eld
+\end_inset
+
+::-
+\begin_inset Quotes erd
+\end_inset
+
+ means 
+\begin_inset Quotes eld
+\end_inset
+
+is defined to be
+\begin_inset Quotes erd
+\end_inset
+
+, and 
+\begin_inset Quotes eld
+\end_inset
+
+|
+\begin_inset Quotes erd
+\end_inset
+
+ means 
+\begin_inset Quotes eld
+\end_inset
+
+or
+\begin_inset Quotes erd
+\end_inset
+
+.
+ In Listing 5
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Listing 5"
+
+\end_inset
+
+, items surrounded by curly braces are descriptive rather than formal definition
+s.
+ Items surrounded by single quotation marks are literal items and must appear
+ exactly as shown on Listing 5
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Listing 5"
+
+\end_inset
+
+.
+ All other items are nonterminal components of the grammar and must be defined
+ in the grammar.
+ Using the grammar expressed in Listing 5
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Listing 5"
+
+\end_inset
+
+, it is possible to write a simple recursive-descent compiler to translate
+ rules into their internal form.
+\end_layout
+
+\begin_layout Standard
+To write the compiler, start at the first line of the grammar and write
+ a routine that can accept a token from a file and decide if it is the starting
+ token of a query, rule or command.
+ A token is a string of characters surrounded by white space or terminated
+ by the end of a line.
+\end_layout
+
+\begin_layout Standard
+The routine then calls the appropriate procedure to analyze the rest of
+ the sentence.
+ Each routine in the parser accepts tokens until it reads a token it can't
+ recognize.
+ At this point it returns control to the routine which called it.
+ As a side effect of recognizing the components of a rule or query, the
+ compler builds the linked structure that represents the final form of the
+ rule or query.
+ The VT-PROLOG interpreter available from the AI EXPERT Bulletin Board Services
+ listed on page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "Resources"
+
+\end_inset
+
+ and the Compuserve account contains a simple compiler that accomplishes
+ this.
+ We won't go into the details of parsing and compiling here, we'll leave
+ that for another column.
+\end_layout
+
+\begin_layout Standard
+The compiler constructs a data base, which consists of a linked list of
+ 
+\shape italic
+cons
+\shape default
+ nodes.
+ Each node's 
+\shape italic
+head_ptr
+\shape default
+ points to a linked list that represents the rule.
+ Each component of the rule is also a list.
+ The list might contain a single item in the case of a constant or variable,
+ or could be more complicated in the case of a functor and its components.
+ Figure 3
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Figure 3"
+
+\end_inset
+
+ illustrates how a sentence like:
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace medskip
+\end_inset
+
+likes(paul,X) :- likes(X,wine).
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+is included as the second sentence in the data base.
+ This looks complicated, but we can take it apart easily by using head and
+ tail procedures.
+ For example, 
+\shape italic
+head(tail(data_base))
+\shape default
+ points to the second sentence in the data base.
+\end_layout
+
+\begin_layout Subsubsection*
+SOLVING QUERIES
+\end_layout
+
+\begin_layout Standard
+Queries are compiled into a structure exactly like rules since they are
+ syntactically similar.
+ Only minor changes are necessary to the previous column's pseudocode 
+\shape italic
+solve
+\shape default
+.
+ Listing 6
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Listing 6"
+
+\end_inset
+
+ illustrates the new version of 
+\shape italic
+solve
+\shape default
+.
+ We pass 
+\shape italic
+solve
+\shape default
+ two pointers, one to the current query and one to the current environment,
+ and an integer representing the current recursion level.
+ The environment has a linked list of 
+\shape italic
+cons
+\shape default
+ items.
+ Each 
+\shape italic
+cons
+\shape default
+ node points to a list consisting of a variable and its binding.
+ Figure 4
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Figure 4"
+
+\end_inset
+
+ illustrates a typical environment list.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{multicols}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lyxline
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1
+\backslash
+parskip}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "67col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+FIGURE 2
+\begin_inset CommandInset label
+LatexCommand label
+name "Figure 2"
+
+\end_inset
+
+: Constructing the list ('a','b','c').
+\end_layout
+
+\begin_layout Plain Layout
+
+\lyxline
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+\noindent
+\begin_inset Graphics
+	filename vt_prolog2_fig2.eps
+	scale 90
+	keepAspectRatio
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "67col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+LISTING 4
+\begin_inset CommandInset label
+LatexCommand label
+name "Listing 4"
+
+\end_inset
+
+: The 
+\shape italic
+append
+\shape default
+ routine.
+\end_layout
+
+\begin_layout Plain Layout
+
+\lyxline
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+FUNCTION append_list(list1,list2 : node_ptr) : node_ptr ;
+\begin_inset Newline newline
+\end_inset
+
+ BEGIN
+\begin_inset Newline newline
+\end_inset
+
+  IF list1 = NIL
+\begin_inset Newline newline
+\end_inset
+
+   THEN append_list = list2 
+\begin_inset Newline newline
+\end_inset
+
+   ELSE append_list = cons(head(list1),append_list(tail(list1),list2)) ;
+\begin_inset Newline newline
+\end_inset
+
+END ; (* append_list *)
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "67col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+LISTING 5
+\begin_inset CommandInset label
+LatexCommand label
+name "Listing 5"
+
+\end_inset
+
+: Grammar of rules and queries.
+\end_layout
+
+\begin_layout Plain Layout
+
+\lyxline
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+Sentence ::= rule | query | command
+\begin_inset Newline newline
+\end_inset
+
+rule ::= head '.' | head ':-' tail '.'
+\begin_inset Newline newline
+\end_inset
+
+query ::= '?-' tail '.'
+\begin_inset Newline newline
+\end_inset
+
+command ::= '@' file_name '.'
+\begin_inset Newline newline
+\end_inset
+
+head ::= goal
+\begin_inset Newline newline
+\end_inset
+
+tail ::= goal | goal ',' tail
+\begin_inset Newline newline
+\end_inset
+
+goal ::= constant | variable | structure
+\begin_inset Newline newline
+\end_inset
+
+constant ::= {quoted string} | {token beginning with 'a''z'}
+\begin_inset Newline newline
+\end_inset
+
+variable ::= {token beginning with 'A''Z' or '_'}
+\begin_inset Newline newline
+\end_inset
+
+structure ::= functor '(' component_list ')'
+\begin_inset Newline newline
+\end_inset
+
+component_list ::= goal | goal ',' component_list
+\begin_inset Newline newline
+\end_inset
+
+file_name ::= {legitimate DOS file name, surrounded by single quotes if
+ it
+\begin_inset Newline newline
+\end_inset
+
+                contains '.', ':' or '
+\backslash
+'}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lyxline
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+columnseprule}{0.25pt}
+\backslash
+begin{multicols}{2}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To perform the copy routines described in the pseudocode version of 
+\shape italic
+solve
+\shape default
+, we call 
+\shape italic
+copy_list
+\shape default
+.
+ This function accepts a list and an integer representing the recursion
+ level and returns a pointer to a new list.
+ The new list is similar to the old, except that the variables in the new
+ list have the recursion level appended.
+ The new list also illustrates an interesting property of linked lists.
+ They can share data.
+ In creating the new list, we create new 
+\shape italic
+cons
+\shape default
+ and variable nodes, but we only copy pointers to functor and constant nodes
+ in the original list.
+ Thus the new list contains pointers to nodes originally allocated for the
+ first list.
+ Both lists share these nodes.
+ Listing 7
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Listing 7"
+
+\end_inset
+
+ illustrates 
+\shape italic
+copy_list
+\shape default
+.
+ Rather than just printing the environment, 
+\shape italic
+solve
+\shape default
+ calls 
+\shape italic
+check_continue
+\shape default
+ when the query list is finally reduced to NIL.
+ This routine prints the appropriate elements from the environment list
+ and then waits for the user to respond by either pressing the Enter key
+ or typing a semicolon (;).
+ The semicolon is interpreted as a request to continue searching for more
+ solutions.
+ Pressing the Enter key is interpreted to mean that the user is satisfied
+ with the present solution and the search should be abandoned.
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+unify
+\shape default
+ is implemented as a Boolean function which performs the matching described
+ by Table 1
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Table 1"
+
+\end_inset
+
+.
+ When 
+\shape italic
+unify
+\shape default
+ binds a variable, it leaves a new list on the front of the current environment
+ list.
+ By putting new bindings on the front of the list, the proper environment
+ is always available for backtracking.
+ Listing 8
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Listing 8"
+
+\end_inset
+
+ illustrates how new lists are attached to the front of the environment
+ list.
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+make_binding
+\shape default
+ illustrates one other interesting point.
+ Variables that begin with an underscore are not bound to anything.
+ They are called anonymous variables and are useful for forming queries
+ where we are not interested in the particular values used to resolve a
+ query.
+\end_layout
+
+\begin_layout Subsubsection*
+GARBAGE COLLECTION
+\end_layout
+
+\begin_layout Standard
+You may have noticed that some of the list operations result in nodes that
+ are inaccessible.
+ Repeated use of 
+\shape italic
+copy_list
+\shape default
+ in the procedure 
+\shape italic
+solve
+\shape default
+ results in a series of lists, portions of which we have no access to.
+ This is not a problem if we have infinite memory available to us.
+ Unfortunately, since real computers have severely limited memories, we
+ need a method of reclaiming some of this lost space.
+\end_layout
+
+\begin_layout Standard
+The interpreter recovers space by means of a simple but effective garbage
+ collection method.
+ It maintains a list of 
+\shape italic
+cons
+\shape default
+ nodes which initially point to the data base and the original query.
+ On entry to 
+\shape italic
+solve
+\shape default
+, the current query and the current environment are consed to the front
+ of this list.
+ This list, called 
+\shape italic
+saved_list
+\shape default
+, represents all the items that must be maintained should garbage collection
+ be invoked.
+ On exit from 
+\shape italic
+solve
+\shape default
+, the 
+\shape italic
+cons
+\shape default
+ nodes pointing to the current query and environment are removed from the
+ list.
+\end_layout
+
+\begin_layout Standard
+Before each call to unify, a check is made of the amount of free memory.
+ If this amount falls below a specified level, the garbage collection routines
+ are called.
+ The garbage collection method depends upon the fact that Turbo Pascal allocates
+ dynamic memory in eight-byte blocks.
+ The interpreter considers all of dynamic memory to be a collection of eight-byt
+e blocks.
+ Gargage collection proceeds in three phases.
+ First, each block in memory is marked as being available.
+ Next, 
+\shape italic
+saved_list
+\shape default
+ is traversed and each cell on 
+\shape italic
+saved_list
+\shape default
+ is marked as being in use.
+ Finally, each memory block is again examined and blocks not marked as being
+ in use are attached to a special free block list.
+ Adjacent free blocks are compacted into larger blocks.
+ The next time 
+\shape italic
+get_memory
+\shape default
+ is called, the free list is first examined for a suitable block, and if
+ one is found, that block is reused.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{multicols}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lyxline
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1
+\backslash
+parskip}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "67col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+FIGURE 3
+\begin_inset CommandInset label
+LatexCommand label
+name "Figure 3"
+
+\end_inset
+
+: The structure of 
+\begin_inset Quotes eld
+\end_inset
+
+
+\shape italic
+likes(paul,X)
+\begin_inset space ~
+\end_inset
+
+:- likes(X,wine)
+\shape default
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Plain Layout
+
+\lyxline
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+\noindent
+\begin_inset Graphics
+	filename vt_prolog2_fig3.eps
+	scale 75
+	keepAspectRatio
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lyxline
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+columnseprule}{0.25pt}
+\backslash
+begin{multicols}{2}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+BUILT-IN PREDICATES
+\end_layout
+
+\begin_layout Standard
+The entire interpreter described is available in source code form from the
+ AI EXPERT BBS and Compuserve account.
+ It is written in Turbo Pascal for the IBM PC and compatibles.
+ It should not be difficult to convert to another version of Pascal or another
+ language.
+ If you wish to convert the program to another language, the target language
+ should support recursion and some form of dynamic memory allocation.
+ C or Modula-2 would be an ideal target language.
+\end_layout
+
+\begin_layout Standard
+This interpreter illustrates the pattern-matching capabilities of PROLOG,
+ but most implementations of PROLOG are considerably more sophisticated
+ than this.
+ Most commercial PROLOGs allow users to define rules that display messages
+ on the screen, read the keyboard, and control the search mechanism.
+ Also, our simple interpreter contains no arithmetic capabilities or ability
+ to make numerical or string comparisons.
+ Commercial interpreters provide these capabilities through built-in predicates.
+ A built-in predicate is a goal whose definition is provided by the interpreter
+ rather than the programmer.
+\end_layout
+
+\begin_layout Standard
+Built-in predicates could be included in the 
+\shape italic
+solve
+\shape default
+ routine.
+ After attempting to match the head of a query against the heads of each
+ of the rules, it could be matched against a list of built-in functions.
+ If a match is found, any variables in the component list could be looked
+ up in the current environment list and the operation performed.
+ Built-in operations could have side-effects such as opening a file or printing
+ items on the screen.
+ These operations should indicate successful completion by calling 
+\shape italic
+solve
+\shape default
+ with the tail of the query.
+\end_layout
+
+\begin_layout Subsubsection*
+OTHER EXTENSIONS
+\end_layout
+
+\begin_layout Standard
+Most versions of PROLOG provide a means to manipulate lists directly from
+ rules.
+ A list is an ordered sequence of elements.
+ The ability to manipulate lists in PROLOG allows us to write concise programs
+ to perform tasks like parsing and sorting.
+ List manipulation in PROLOG will be the subject of a later article.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{multicols}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lyxline
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1
+\backslash
+parskip}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "67col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+FIGURE 4
+\begin_inset CommandInset label
+LatexCommand label
+name "Figure 4"
+
+\end_inset
+
+: Typical environment showing 
+\shape italic
+X
+\shape default
+ bound to 
+\shape italic
+joan
+\shape default
+.
+\end_layout
+
+\begin_layout Plain Layout
+
+\lyxline
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+\noindent
+\begin_inset Graphics
+	filename vt_prolog2_fig4.eps
+	keepAspectRatio
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "67col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+LISTING 6
+\begin_inset CommandInset label
+LatexCommand label
+name "Listing 6"
+
+\end_inset
+
+: The 
+\shape italic
+solve
+\shape default
+ procedure- final version.
+\end_layout
+
+\begin_layout Plain Layout
+
+\lyxline
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+\noindent
+PROCEDURE solve(list,env : node_ptr ; level : integer) ;
+\begin_inset Newline newline
+\end_inset
+
+ VAR 
+\begin_inset Newline newline
+\end_inset
+
+  new_env,p : node_ptr ;
+\begin_inset Newline newline
+\end_inset
+
+ BEGIN
+\begin_inset Newline newline
+\end_inset
+
+  IF list = NIL
+\begin_inset Newline newline
+\end_inset
+
+   THEN check_continue
+\begin_inset Newline newline
+\end_inset
+
+   ELSE
+\begin_inset Newline newline
+\end_inset
+
+    BEGIN
+\begin_inset Newline newline
+\end_inset
+
+     p := data_base ;
+\begin_inset Newline newline
+\end_inset
+
+     WHILE (p <> NIL) AND (NOT solved) DO
+\begin_inset Newline newline
+\end_inset
+
+      IF unify(copy_list(head(head(p)),level + 1_,
+\begin_inset Newline newline
+\end_inset
+
+                        head(list),env,new_env)
+\begin_inset Newline newline
+\end_inset
+
+       THEN solve(append_list(copy_list(tail(head(p)),level + 1,
+\begin_inset Newline newline
+\end_inset
+
+                        tail(list)),new_env,level + 1) ;
+\begin_inset Newline newline
+\end_inset
+
+     p := tail(p) ;
+\begin_inset Newline newline
+\end_inset
+
+    END ;
+\begin_inset Newline newline
+\end_inset
+
+END ; (* solve *)
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "67col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+LISTING 7
+\begin_inset CommandInset label
+LatexCommand label
+name "Listing 7"
+
+\end_inset
+
+: Routine to copy lists.
+\end_layout
+
+\begin_layout Plain Layout
+
+\lyxline
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+FUNCTION copy_list(list1 : node_ptr ; copy_level : integer) : node_ptr ;
+\begin_inset Newline newline
+\end_inset
+
+ VAR
+\begin_inset Newline newline
+\end_inset
+
+  temp_list,p : node_ptr ;
+\begin_inset Newline newline
+\end_inset
+
+  level_str : string[6];
+\begin_inset Newline newline
+\end_inset
+
+ PROCEDURE list_copy(from_list : node_ptr ; VAR to_list : node_ptr) ;
+\begin_inset Newline newline
+\end_inset
+
+  BEGIN
+\begin_inset Newline newline
+\end_inset
+
+   IF from_list <> NIL
+\begin_inset Newline newline
+\end_inset
+
+    THEN
+\begin_inset Newline newline
+\end_inset
+
+     CASE from_list^.tag OF
+\begin_inset Newline newline
+\end_inset
+
+      variable : to_list := alloc_str(variable, concat(from_list^.string_data,
+ level_str) ;
+\begin_inset Newline newline
+\end_inset
+
+      func,
+\begin_inset Newline newline
+\end_inset
+
+      constant : to_list := from_list ;
+\begin_inset Newline newline
+\end_inset
+
+      cons_node: BEGIN
+\begin_inset Newline newline
+\end_inset
+
+                  list_copy(tail(from(list),to_list) ;
+\begin_inset Newline newline
+\end_inset
+
+                  to_list := cons(copy_list(head(from_list),copy_level),to_list)
+ ;
+\begin_inset Newline newline
+\end_inset
+
+                 END ;
+\begin_inset Newline newline
+\end_inset
+
+     END ;
+\begin_inset Newline newline
+\end_inset
+
+ END ; (* list_copy *)
+\begin_inset Newline newline
+\end_inset
+
+BEGIN
+\begin_inset Newline newline
+\end_inset
+
+ str(copy_level,level_str) ;
+\begin_inset Newline newline
+\end_inset
+
+ level_str := concat('#'.level_str) ;
+\begin_inset Newline newline
+\end_inset
+
+ temp_list := NIL ;
+\begin_inset Newline newline
+\end_inset
+
+ list_copy(list, temp_list) ;
+\begin_inset Newline newline
+\end_inset
+
+ copy_list := temp_list ;
+\begin_inset Newline newline
+\end_inset
+
+END ; (* copy_list *)
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "67col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+TABLE 1
+\begin_inset CommandInset label
+LatexCommand label
+name "Table 1"
+
+\end_inset
+
+: Unification of items in rules and queries.
+\end_layout
+
+\begin_layout Plain Layout
+
+\lyxline
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+\noindent
+\begin_inset Tabular
+<lyxtabular version="3" rows="1" columns="2">
+<features>
+<column alignment="block" valignment="top" width="25line%">
+<column alignment="center" valignment="top" width="75line%">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ITEM WITHIN THE QUERY
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="1" columns="1">
+<features>
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" rotate="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ITEM IN THE RULE
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="4">
+<features>
+<column alignment="block" valignment="top" width="20line%">
+<column alignment="block" valignment="top" width="25line%">
+<column alignment="block" valignment="top" width="25line%">
+<column alignment="block" valignment="top" width="25line%">
+<row>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Constant (C2)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Variable (V2)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Functor (F2)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Constant (C1)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+succeed if C1 = C2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+succeed bind V2 to C1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+fail
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Variable (V1)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+succeed bind V1 to C2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+succeed bind V1 to V2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+succeed bind V1 to F2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Functor (F1)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+fail
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+succeed bind V2 to F1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+succeed if expressions have same functor and arity and each pair of components
+ can be unified
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "67col%"
+special "none"
+height "1pt"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\noindent
+LISTING 8
+\begin_inset CommandInset label
+LatexCommand label
+name "Listing 8"
+
+\end_inset
+
+: Procedure to bind variables.
+\end_layout
+
+\begin_layout Plain Layout
+
+\lyxline
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+PROCEDURE make_binding(l1,l2 : node_ptr) ;
+\begin_inset Newline newline
+\end_inset
+
+ BEGIN
+\begin_inset Newline newline
+\end_inset
+
+  IF copy(string_val(head(l1)),1,1) <> '_'
+\begin_inset Newline newline
+\end_inset
+
+   THEN new_environ := cons(cons(head(l1),l2),environ)
+\begin_inset Newline newline
+\end_inset
+
+   ELSE new_environ := environ ;
+\begin_inset Newline newline
+\end_inset
+
+  unify := true ;
+\begin_inset Newline newline
+\end_inset
+
+END ; (* make_binding *)
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lyxline
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+columnseprule}{0.25pt}
+\backslash
+begin{multicols}{2}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We hope that these two articles have given you some idea of the issues involved
+ in implementing a PROLOG interpreter.
+ The full VT-PROLOG source is available from the AI EXPERT BBS
+\begin_inset CommandInset label
+LatexCommand label
+name "Resources"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+
+\lyxline
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1
+\backslash
+parskip}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+Bill and Bev Thompson are writers and consultants specialising in implementing
+ AI techniques on microcomputers.
+ They are the authors of MicroExpert, an expert system shell, and have worked
+ extensively on knowledge-based designs.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{multicols}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
